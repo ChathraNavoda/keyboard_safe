@@ -5,8 +5,9 @@ class WithoutKeyboardSafePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
+      physics: const BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -25,17 +26,14 @@ class WithoutKeyboardSafePage extends StatelessWidget {
             },
             style: ElevatedButton.styleFrom(
               elevation: 0,
-              backgroundColor: const Color(0xFF1DB2BD), // pastel teal
-              foregroundColor: Colors.black87, // 👈 makes text and icon visible
+              backgroundColor: const Color(0xFF1DB2BD),
+              foregroundColor: Colors.black87,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            icon: const Icon(
-              Icons.send,
-              color: Colors.white,
-            ),
+            icon: const Icon(Icons.send, color: Colors.white),
             label: const Text(
               'Send',
               style: TextStyle(
