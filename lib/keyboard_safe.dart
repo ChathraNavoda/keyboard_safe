@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 /// A widget that avoids keyboard overflow, adds padding,
 /// optionally scrolls and sticks a footer above the keyboard,
@@ -10,8 +11,10 @@ class KeyboardSafe extends StatefulWidget {
   final bool autoScrollToFocused;
   final bool dismissOnTapOutside;
   final bool safeArea;
+  final bool persistFooter;
   final EdgeInsets padding;
   final bool reverse;
+  final void Function(bool visible, double height)? onKeyboardChanged;
 
   const KeyboardSafe({
     super.key,
@@ -21,8 +24,10 @@ class KeyboardSafe extends StatefulWidget {
     this.autoScrollToFocused = true,
     this.dismissOnTapOutside = false,
     this.safeArea = false,
+    this.persistFooter = false,
     this.padding = EdgeInsets.zero,
     this.reverse = false,
+    this.onKeyboardChanged,
   });
 
   /// Call this to dismiss the keyboard
@@ -34,16 +39,41 @@ class KeyboardSafe extends StatefulWidget {
   State<KeyboardSafe> createState() => _KeyboardSafeState();
 }
 
-class _KeyboardSafeState extends State<KeyboardSafe> {
+class _KeyboardSafeState extends State<KeyboardSafe>
+    with WidgetsBindingObserver {
   final _scrollController = ScrollController();
+  double _lastKeyboardHeight = 0.0;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
     if (widget.autoScrollToFocused) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
         FocusManager.instance.addListener(_handleFocusChange);
       });
+    }
+  }
+
+  @override
+  void dispose() {
+    if (widget.autoScrollToFocused) {
+      FocusManager.instance.removeListener(_handleFocusChange);
+    }
+    WidgetsBinding.instance.removeObserver(this);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final keyboardVisible = keyboardHeight > 0.0;
+
+    if (_lastKeyboardHeight != keyboardHeight) {
+      _lastKeyboardHeight = keyboardHeight;
+      widget.onKeyboardChanged?.call(keyboardVisible, keyboardHeight);
     }
   }
 
@@ -60,21 +90,14 @@ class _KeyboardSafeState extends State<KeyboardSafe> {
   }
 
   @override
-  void dispose() {
-    if (widget.autoScrollToFocused) {
-      FocusManager.instance.removeListener(_handleFocusChange);
-    }
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
     Widget content = Padding(
       padding: widget.padding.copyWith(
-        bottom: widget.footer != null ? 16.0 : keyboardHeight,
+        bottom: widget.footer != null && !widget.persistFooter
+            ? 16.0
+            : keyboardHeight,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -92,7 +115,8 @@ class _KeyboardSafeState extends State<KeyboardSafe> {
       content = SingleChildScrollView(
         controller: _scrollController,
         reverse: widget.reverse,
-        padding: EdgeInsets.only(bottom: keyboardHeight),
+        padding: EdgeInsets.only(
+            bottom: widget.persistFooter ? 0.0 : keyboardHeight),
         physics: const BouncingScrollPhysics(),
         child: content,
       );

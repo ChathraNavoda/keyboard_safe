@@ -41,6 +41,11 @@ class _WithKeyboardSafePageState extends State<WithKeyboardSafePage> {
       scroll: true,
       autoScrollToFocused: true,
       dismissOnTapOutside: true,
+      persistFooter: true,
+      onKeyboardChanged: (visible, height) {
+        debugPrint(
+            'Keyboard is ${visible ? 'visible' : 'hidden'} ($height px)');
+      },
       safeArea: true,
       padding: const EdgeInsets.all(24),
       footer: Padding(
