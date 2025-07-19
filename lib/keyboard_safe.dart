@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 /// A widget that avoids keyboard overflow, adds padding,
-/// optionally scrolls and sticks a footer above the keyboard.
+/// optionally scrolls and sticks a footer above the keyboard,
+/// dismisses keyboard on tap, and respects safe areas.
 class KeyboardSafe extends StatefulWidget {
   final Widget child;
   final Widget? footer;
   final bool scroll;
   final bool autoScrollToFocused;
+  final bool dismissOnTapOutside;
+  final bool safeArea;
   final EdgeInsets padding;
   final bool reverse;
 
@@ -16,6 +19,8 @@ class KeyboardSafe extends StatefulWidget {
     this.footer,
     this.scroll = false,
     this.autoScrollToFocused = true,
+    this.dismissOnTapOutside = false,
+    this.safeArea = false,
     this.padding = EdgeInsets.zero,
     this.reverse = false,
   });
@@ -67,7 +72,7 @@ class _KeyboardSafeState extends State<KeyboardSafe> {
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
-    final content = Padding(
+    Widget content = Padding(
       padding: widget.padding.copyWith(
         bottom: widget.footer != null ? 16.0 : keyboardHeight,
       ),
@@ -83,14 +88,28 @@ class _KeyboardSafeState extends State<KeyboardSafe> {
       ),
     );
 
-    if (!widget.scroll) return content;
+    if (widget.scroll) {
+      content = SingleChildScrollView(
+        controller: _scrollController,
+        reverse: widget.reverse,
+        padding: EdgeInsets.only(bottom: keyboardHeight),
+        physics: const BouncingScrollPhysics(),
+        child: content,
+      );
+    }
 
-    return SingleChildScrollView(
-      controller: _scrollController,
-      reverse: widget.reverse,
-      padding: EdgeInsets.only(bottom: keyboardHeight),
-      physics: const BouncingScrollPhysics(),
-      child: content,
-    );
+    if (widget.safeArea) {
+      content = SafeArea(child: content);
+    }
+
+    if (widget.dismissOnTapOutside) {
+      content = GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => KeyboardSafe.dismissKeyboard(context),
+        child: content,
+      );
+    }
+
+    return content;
   }
 }

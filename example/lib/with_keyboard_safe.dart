@@ -8,7 +8,9 @@ class WithKeyboardSafePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return KeyboardSafe(
       scroll: true,
-      //autoScrollToFocused: true,
+      autoScrollToFocused: true,
+      dismissOnTapOutside: true,
+      safeArea: true,
       padding: const EdgeInsets.all(24),
       footer: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
