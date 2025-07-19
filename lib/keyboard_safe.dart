@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 /// A widget that avoids keyboard overflow by adding bottom padding.
-/// Optionally wraps content in a scroll view.
+/// Also supports scroll wrapping and sticky footer above the keyboard.
 class KeyboardSafe extends StatelessWidget {
   final Widget child;
+  final Widget? footer;
   final bool scroll;
   final EdgeInsets padding;
   final bool reverse;
@@ -11,6 +12,7 @@ class KeyboardSafe extends StatelessWidget {
   const KeyboardSafe({
     super.key,
     required this.child,
+    this.footer,
     this.scroll = false,
     this.padding = EdgeInsets.zero,
     this.reverse = false,
@@ -19,23 +21,38 @@ class KeyboardSafe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-    final totalPadding =
-        padding.copyWith(bottom: padding.bottom + keyboardHeight);
 
-    Widget content = Padding(
-      padding: totalPadding,
+    final adjustedPadding = padding.copyWith(
+      bottom: padding.bottom + (footer == null ? keyboardHeight : 0),
+    );
+
+    Widget mainContent = Padding(
+      padding: adjustedPadding,
       child: child,
     );
 
     if (scroll) {
-      content = SingleChildScrollView(
+      mainContent = SingleChildScrollView(
         reverse: reverse,
         padding: EdgeInsets.zero,
         physics: const BouncingScrollPhysics(),
-        child: content,
+        child: mainContent,
       );
     }
 
-    return content;
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: mainContent,
+        ),
+        if (footer != null)
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: keyboardHeight,
+            child: footer!,
+          ),
+      ],
+    );
   }
 }

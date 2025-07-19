@@ -9,6 +9,34 @@ class WithKeyboardSafePage extends StatelessWidget {
     return KeyboardSafe(
       scroll: true,
       padding: const EdgeInsets.all(24),
+      footer: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        child: ElevatedButton.icon(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Submitted ✨')),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            backgroundColor: const Color(0xFF1DB2BD), // pastel teal
+            foregroundColor: Colors.black87, // 👈 makes text and icon visible
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          icon: const Icon(
+            Icons.send,
+            color: Colors.white,
+          ),
+          label: const Text(
+            'Send',
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+          ),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: const [
@@ -43,7 +71,7 @@ class _TextFieldBox extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: TextField(
         maxLines: maxLines,
         decoration: InputDecoration(
