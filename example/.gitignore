@@ -1,0 +1,62 @@
+# ----------------------------
+# 🔧 Miscellaneous
+# ----------------------------
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# ----------------------------
+# 🧠 IDEs
+# ----------------------------
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Uncomment if you want to ignore VS Code settings
+#.vscode/
+
+# ----------------------------
+# 🐦 Dart / Flutter / Pub
+# ----------------------------
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+**/doc/api/
+**/ios/Flutter/.last_build_id
+
+# ----------------------------
+# 🤖 Android Build
+# ----------------------------
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# ----------------------------
+# 🧪 Symbolication / Obfuscation
+# ----------------------------
+app.*.symbols
+app.*.map.json
+
+# ----------------------------
+# 📦 Ignore generated platform folders in example/
+# ----------------------------
+example/android/
+example/ios/
+example/macos/
+example/web/
+example/windows/
+example/linux/
