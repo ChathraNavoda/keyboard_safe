@@ -46,6 +46,8 @@ class _WithKeyboardSafePageState extends State<WithKeyboardSafePage> {
         debugPrint(
             'Keyboard is ${visible ? 'visible' : 'hidden'} ($height px)');
       },
+      keyboardAnimationDuration: const Duration(milliseconds: 300),
+      keyboardAnimationCurve: Curves.easeInOut,
       safeArea: true,
       padding: const EdgeInsets.all(24),
       footer: Padding(

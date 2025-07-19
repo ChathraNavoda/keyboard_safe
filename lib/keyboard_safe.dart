@@ -3,7 +3,8 @@ import 'package:flutter/scheduler.dart';
 
 /// A widget that avoids keyboard overflow, adds padding,
 /// optionally scrolls and sticks a footer above the keyboard,
-/// dismisses keyboard on tap, and respects safe areas.
+/// dismisses keyboard on tap, respects safe areas,
+/// and animates transitions when keyboard appears.
 class KeyboardSafe extends StatefulWidget {
   final Widget child;
   final Widget? footer;
@@ -14,7 +15,9 @@ class KeyboardSafe extends StatefulWidget {
   final bool persistFooter;
   final EdgeInsets padding;
   final bool reverse;
+  final Duration keyboardAnimationDuration;
   final void Function(bool visible, double height)? onKeyboardChanged;
+  final Curve keyboardAnimationCurve;
 
   const KeyboardSafe({
     super.key,
@@ -27,7 +30,9 @@ class KeyboardSafe extends StatefulWidget {
     this.persistFooter = false,
     this.padding = EdgeInsets.zero,
     this.reverse = false,
+    this.keyboardAnimationDuration = const Duration(milliseconds: 250),
     this.onKeyboardChanged,
+    required this.keyboardAnimationCurve,
   });
 
   /// Call this to dismiss the keyboard
@@ -74,6 +79,7 @@ class _KeyboardSafeState extends State<KeyboardSafe>
     if (_lastKeyboardHeight != keyboardHeight) {
       _lastKeyboardHeight = keyboardHeight;
       widget.onKeyboardChanged?.call(keyboardVisible, keyboardHeight);
+      setState(() {}); // 👈 triggers animation
     }
   }
 
@@ -93,7 +99,9 @@ class _KeyboardSafeState extends State<KeyboardSafe>
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
-    Widget content = Padding(
+    Widget content = AnimatedPadding(
+      duration: widget.keyboardAnimationDuration,
+      curve: widget.keyboardAnimationCurve,
       padding: widget.padding.copyWith(
         bottom: widget.footer != null && !widget.persistFooter
             ? 16.0
@@ -134,6 +142,10 @@ class _KeyboardSafeState extends State<KeyboardSafe>
       );
     }
 
-    return content;
+    return AnimatedContainer(
+      duration: widget.keyboardAnimationDuration,
+      curve: widget.keyboardAnimationCurve,
+      child: content,
+    );
   }
 }
