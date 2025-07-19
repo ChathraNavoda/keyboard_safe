@@ -1,8 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:keyboard_safe/keyboard_safe.dart';
 
-class WithKeyboardSafePage extends StatelessWidget {
+class WithKeyboardSafePage extends StatefulWidget {
   const WithKeyboardSafePage({super.key});
+
+  @override
+  State<WithKeyboardSafePage> createState() => _WithKeyboardSafePageState();
+}
+
+class _WithKeyboardSafePageState extends State<WithKeyboardSafePage> {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final messageController = TextEditingController();
+
+  void _handleSubmit() {
+    KeyboardSafe.dismissKeyboard(context);
+
+    // Show feedback
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Submitted ✨')),
+    );
+
+    // Clear fields
+    nameController.clear();
+    emailController.clear();
+    messageController.clear();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    messageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +46,7 @@ class WithKeyboardSafePage extends StatelessWidget {
       footer: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: ElevatedButton.icon(
-          onPressed: () {
-            KeyboardSafe.dismissKeyboard(context); // 👈 dismiss keyboard
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Submitted ✨')),
-            );
-          },
+          onPressed: _handleSubmit,
           style: ElevatedButton.styleFrom(
             elevation: 0,
             backgroundColor: const Color(0xFF1DB2BD),
@@ -43,15 +69,24 @@ class WithKeyboardSafePage extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: const [
-          _TextFieldBox(label: 'Name', hint: 'Your full name'),
-          SizedBox(height: 16),
-          _TextFieldBox(label: 'Email', hint: 'you@example.com'),
-          SizedBox(height: 16),
+        children: [
+          _TextFieldBox(
+            label: 'Name',
+            hint: 'Your full name',
+            controller: nameController,
+          ),
+          const SizedBox(height: 16),
+          _TextFieldBox(
+            label: 'Email',
+            hint: 'you@example.com',
+            controller: emailController,
+          ),
+          const SizedBox(height: 16),
           _TextFieldBox(
             label: 'Message',
             hint: 'Type something...',
             maxLines: 4,
+            controller: messageController,
           ),
         ],
       ),
@@ -63,11 +98,13 @@ class _TextFieldBox extends StatelessWidget {
   final String label;
   final String hint;
   final int maxLines;
+  final TextEditingController? controller;
 
   const _TextFieldBox({
     required this.label,
     required this.hint,
     this.maxLines = 1,
+    this.controller,
   });
 
   @override
@@ -80,6 +117,7 @@ class _TextFieldBox extends StatelessWidget {
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: TextField(
+        controller: controller,
         maxLines: maxLines,
         decoration: InputDecoration(
           labelText: label,
