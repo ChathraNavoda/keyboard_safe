@@ -18,6 +18,11 @@ class KeyboardSafe extends StatelessWidget {
     this.reverse = false,
   });
 
+  /// Call this to dismiss the keyboard from anywhere
+  static void dismissKeyboard(BuildContext context) {
+    FocusScope.of(context).unfocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
@@ -42,9 +47,7 @@ class KeyboardSafe extends StatelessWidget {
 
     return Stack(
       children: [
-        Positioned.fill(
-          child: mainContent,
-        ),
+        Positioned.fill(child: mainContent),
         if (footer != null)
           Positioned(
             left: 0,

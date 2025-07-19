@@ -13,27 +13,28 @@ class WithKeyboardSafePage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: ElevatedButton.icon(
           onPressed: () {
+            KeyboardSafe.dismissKeyboard(context); // 👈 dismiss keyboard
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Submitted ✨')),
             );
           },
           style: ElevatedButton.styleFrom(
             elevation: 0,
-            backgroundColor: const Color(0xFF1DB2BD), // pastel teal
-            foregroundColor: Colors.black87, // 👈 makes text and icon visible
+            backgroundColor: const Color(0xFF1DB2BD),
+            foregroundColor: Colors.black87,
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          icon: const Icon(
-            Icons.send,
-            color: Colors.white,
-          ),
+          icon: const Icon(Icons.send, color: Colors.white),
           label: const Text(
             'Send',
             style: TextStyle(
-                color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
@@ -45,7 +46,10 @@ class WithKeyboardSafePage extends StatelessWidget {
           _TextFieldBox(label: 'Email', hint: 'you@example.com'),
           SizedBox(height: 16),
           _TextFieldBox(
-              label: 'Message', hint: 'Type something...', maxLines: 4),
+            label: 'Message',
+            hint: 'Type something...',
+            maxLines: 4,
+          ),
         ],
       ),
     );
