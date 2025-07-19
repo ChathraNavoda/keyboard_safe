@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-/// A widget that avoids keyboard overflow by adding bottom padding.
-/// Also supports scroll wrapping and sticky footer above the keyboard.
-class KeyboardSafe extends StatelessWidget {
+/// A widget that avoids keyboard overflow, adds padding,
+/// optionally scrolls and sticks a footer above the keyboard.
+class KeyboardSafe extends StatefulWidget {
   final Widget child;
   final Widget? footer;
   final bool scroll;
+  final bool autoScrollToFocused;
   final EdgeInsets padding;
   final bool reverse;
 
@@ -14,48 +15,82 @@ class KeyboardSafe extends StatelessWidget {
     required this.child,
     this.footer,
     this.scroll = false,
+    this.autoScrollToFocused = true,
     this.padding = EdgeInsets.zero,
     this.reverse = false,
   });
 
-  /// Call this to dismiss the keyboard from anywhere
+  /// Call this to dismiss the keyboard
   static void dismissKeyboard(BuildContext context) {
     FocusScope.of(context).unfocus();
+  }
+
+  @override
+  State<KeyboardSafe> createState() => _KeyboardSafeState();
+}
+
+class _KeyboardSafeState extends State<KeyboardSafe> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.autoScrollToFocused) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FocusManager.instance.addListener(_handleFocusChange);
+      });
+    }
+  }
+
+  void _handleFocusChange() {
+    final focused = FocusManager.instance.primaryFocus;
+    if (focused?.context != null) {
+      Scrollable.ensureVisible(
+        focused!.context!,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+        alignment: 0.2,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    if (widget.autoScrollToFocused) {
+      FocusManager.instance.removeListener(_handleFocusChange);
+    }
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
-    final adjustedPadding = padding.copyWith(
-      bottom: padding.bottom + (footer == null ? keyboardHeight : 0),
+    final content = Padding(
+      padding: widget.padding.copyWith(
+        bottom: widget.footer != null ? 16.0 : keyboardHeight,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          widget.child,
+          if (widget.footer != null) ...[
+            const SizedBox(height: 24),
+            widget.footer!,
+          ],
+        ],
+      ),
     );
 
-    Widget mainContent = Padding(
-      padding: adjustedPadding,
-      child: child,
-    );
+    if (!widget.scroll) return content;
 
-    if (scroll) {
-      mainContent = SingleChildScrollView(
-        reverse: reverse,
-        padding: EdgeInsets.zero,
-        physics: const BouncingScrollPhysics(),
-        child: mainContent,
-      );
-    }
-
-    return Stack(
-      children: [
-        Positioned.fill(child: mainContent),
-        if (footer != null)
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: keyboardHeight,
-            child: footer!,
-          ),
-      ],
+    return SingleChildScrollView(
+      controller: _scrollController,
+      reverse: widget.reverse,
+      padding: EdgeInsets.only(bottom: keyboardHeight),
+      physics: const BouncingScrollPhysics(),
+      child: content,
     );
   }
 }
