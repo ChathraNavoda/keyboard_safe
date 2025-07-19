@@ -32,7 +32,7 @@ class KeyboardSafe extends StatefulWidget {
     this.reverse = false,
     this.keyboardAnimationDuration = const Duration(milliseconds: 250),
     this.onKeyboardChanged,
-    required this.keyboardAnimationCurve,
+    this.keyboardAnimationCurve = Curves.easeOut,
   });
 
   /// Call this to dismiss the keyboard
