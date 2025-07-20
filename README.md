@@ -1,39 +1,144 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# 📱 keyboard_safe
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+A lightweight Flutter widget that prevents keyboard overflow by automatically adjusting padding and optionally scrolling input fields into view.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+[![pub package](https://img.shields.io/pub/v/keyboard_safe.svg)](https://pub.dev/packages/keyboard_safe)
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+---
 
-## Features
+## ✅ Why KeyboardSafe?
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+Flutter apps often struggle with keyboard handling, especially in complex forms.  
+**`KeyboardSafe`** solves this with a single, configurable wrapper that offers:
 
-## Getting started
+- ✅ Automatically adjusts padding when the keyboard appears
+- 🎯 Auto-scrolls to focused input fields
+- 📌 Optional sticky footer support above the keyboard
+- 👆 Tap outside to dismiss keyboard
+- 📦 Optional SafeArea wrapping
+- 🎬 Smooth animated transitions
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+---
 
-## Usage
+## 🔧 Install it
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Add it to your `pubspec.yaml`:
 
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+  keyboard_safe: ^0.0.1
 ```
 
-## Additional information
+Then run:
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```bash
+flutter pub get
+```
+
+---
+
+## 🔨 Usage
+
+Wrap your form or layout with `KeyboardSafe`:
+
+```dart
+import 'package:keyboard_safe/keyboard_safe.dart';
+
+@override
+Widget build(BuildContext context) {
+  return KeyboardSafe(
+    scroll: true,
+    dismissOnTapOutside: true,
+    footer: ElevatedButton(
+      onPressed: () {},
+      child: const Text('Submit'),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: const [
+        TextField(decoration: InputDecoration(labelText: 'Email')),
+        SizedBox(height: 16),
+        TextField(decoration: InputDecoration(labelText: 'Password')),
+      ],
+    ),
+  );
+}
+```
+
+---
+
+## 📱 Example App
+
+The [`example/`](example/) app demonstrates the benefits of using `KeyboardSafe`:
+
+✅ Includes a toggle for **'With' vs 'Without KeyboardSafe'**  
+✅ Demonstrates auto-scroll to input, sticky footer, keyboard avoidance, and tap-outside dismissal
+
+To run:
+
+```bash
+flutter run example
+```
+
+---
+
+## 📦 Parameters
+
+| Parameter                   | Type                           | Default                       | Description                                                   |
+| --------------------------- | ------------------------------ | ----------------------------- | ------------------------------------------------------------- |
+| `child`                     | `Widget`                       | — _(required)_                | Main content inside the wrapper                               |
+| `footer`                    | `Widget?`                      | `null`                        | Optional footer shown above the keyboard (e.g. Submit button) |
+| `scroll`                    | `bool`                         | `false`                       | Whether to wrap in `SingleChildScrollView`                    |
+| `autoScrollToFocused`       | `bool`                         | `true`                        | Automatically scroll focused field into view                  |
+| `dismissOnTapOutside`       | `bool`                         | `false`                       | Tap anywhere to dismiss keyboard                              |
+| `safeArea`                  | `bool`                         | `false`                       | Wrap in a `SafeArea` widget                                   |
+| `persistFooter`             | `bool`                         | `false`                       | Whether footer should remain visible when keyboard appears    |
+| `padding`                   | `EdgeInsets`                   | `EdgeInsets.zero`             | Base padding applied before keyboard adjustment               |
+| `reverse`                   | `bool`                         | `false`                       | Reverses scroll direction                                     |
+| `onKeyboardChanged`         | `void Function(bool, double)?` | `null`                        | Callback when keyboard appears/disappears                     |
+| `keyboardAnimationDuration` | `Duration`                     | `Duration(milliseconds: 250)` | Duration of keyboard transitions                              |
+| `keyboardAnimationCurve`    | `Curve`                        | `Curves.easeOut`              | Curve used in `AnimatedPadding` and `AnimatedContainer`       |
+
+---
+
+## ⌨️ Dismiss Keyboard
+
+You can programmatically dismiss the keyboard using:
+
+```dart
+KeyboardSafe.dismissKeyboard(context);
+```
+
+---
+
+## 🧪 Testing
+
+This package includes widget tests that verify key behaviors:
+
+```bash
+flutter test
+```
+
+Covered features:
+
+✅ Padding applied when `MediaQuery.viewInsets.bottom` is non-zero  
+✅ Keyboard dismissal when tapping outside of input
+
+---
+
+## 📄 License
+
+MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+## 💡 Contribute
+
+Feel free to file issues or submit PRs to help improve this package.  
+Star ⭐ the repo if you found this helpful!
+
+---
+
+## 💬 Maintainer
+
+Made by [@ChathraNavoda](https://github.com/ChathraNavoda)
