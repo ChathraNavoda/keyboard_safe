@@ -3,6 +3,9 @@
 A lightweight Flutter widget that prevents keyboard overflow by automatically adjusting padding and optionally scrolling input fields into view.
 
 [![pub package](https://img.shields.io/pub/v/keyboard_safe.svg)](https://pub.dev/packages/keyboard_safe)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ChathraNavoda/keyboard_safe?style=social)](https://github.com/ChathraNavoda/keyboard_safe/stargazers)
+[![CI](https://github.com/ChathraNavoda/keyboard_safe/actions/workflows/flutter.yml/badge.svg)](https://github.com/ChathraNavoda/keyboard_safe/actions/workflows/flutter.yml)
 
 ---
 
