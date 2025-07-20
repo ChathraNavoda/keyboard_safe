@@ -1,30 +1,39 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:example/main.dart';
+import 'package:keyboard_safe/keyboard_safe.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('dismisses keyboard on tap outside when enabled', (tester) async {
+    final focusNode = FocusNode();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: KeyboardSafe(
+            dismissOnTapOutside: true,
+            scroll: true,
+            child: Column(
+              children: [
+                const SizedBox(height: 100), // Create some top space
+                TextField(focusNode: focusNode),
+                const SizedBox(height: 600), // Ensure space to tap below
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Focus the TextField
+    focusNode.requestFocus();
     await tester.pump();
+    expect(focusNode.hasFocus, true);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Tap somewhere clearly outside the TextField
+    await tester.tapAt(const Offset(20, 550));
+    await tester.pumpAndSettle();
+
+    // Expect keyboard (focus) dismissed
+    expect(focusNode.hasFocus, false); // ✅
   });
 }
