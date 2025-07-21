@@ -1,24 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-/// A widget that avoids keyboard overflow, adds padding,
-/// optionally scrolls and sticks a footer above the keyboard,
-/// dismisses keyboard on tap, respects safe areas,
-/// and animates transitions when keyboard appears.
+/// A widget that avoids keyboard overflow and layout issues by:
+/// - Adding padding when the keyboard appears
+/// - Optionally scrolling to focused input fields
+/// - Supporting sticky footers above the keyboard
+/// - Dismissing the keyboard when tapping outside
+/// - Respecting SafeArea padding
+/// - Animating layout transitions
 class KeyboardSafe extends StatefulWidget {
+  /// The main content of your screen or form.
   final Widget child;
+
+  /// An optional footer (e.g. Submit button) to be shown above the keyboard.
   final Widget? footer;
+
+  /// If true, wraps the content in a [SingleChildScrollView].
   final bool scroll;
+
+  /// If true, auto-scrolls the focused input into view when the keyboard appears.
   final bool autoScrollToFocused;
+
+  /// If true, dismisses the keyboard when tapping outside of input fields.
   final bool dismissOnTapOutside;
+
+  /// If true, wraps the entire layout in a [SafeArea].
   final bool safeArea;
+
+  /// If true, keeps the footer visible even when the keyboard is open.
   final bool persistFooter;
+
+  /// Additional padding to apply around the content.
   final EdgeInsets padding;
+
+  /// If true, reverses the scroll direction (useful for bottom-up lists).
   final bool reverse;
-  final Duration keyboardAnimationDuration;
+
+  /// Callback invoked when the keyboard visibility or height changes.
   final void Function(bool visible, double height)? onKeyboardChanged;
+
+  /// Duration of the keyboard animation.
+  final Duration keyboardAnimationDuration;
+
+  /// Curve used in keyboard-related animations.
   final Curve keyboardAnimationCurve;
 
+  /// Creates a [KeyboardSafe] widget.
   const KeyboardSafe({
     super.key,
     required this.child,
@@ -35,7 +62,7 @@ class KeyboardSafe extends StatefulWidget {
     this.keyboardAnimationCurve = Curves.easeOut,
   });
 
-  /// Call this to dismiss the keyboard
+  /// Programmatically dismisses the keyboard.
   static void dismissKeyboard(BuildContext context) {
     FocusScope.of(context).unfocus();
   }
@@ -79,7 +106,7 @@ class _KeyboardSafeState extends State<KeyboardSafe>
     if (_lastKeyboardHeight != keyboardHeight) {
       _lastKeyboardHeight = keyboardHeight;
       widget.onKeyboardChanged?.call(keyboardVisible, keyboardHeight);
-      setState(() {}); // 👈 triggers animation
+      setState(() {}); // Triggers animation
     }
   }
 
