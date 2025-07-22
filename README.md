@@ -83,6 +83,8 @@ To run:
 flutter run example
 ```
 
+> 💡 If you use FVM, replace `flutter` with `fvm flutter` in the command above.
+
 ---
 
 ## 🎬 Demo
@@ -96,6 +98,20 @@ Here's a quick demo of `KeyboardSafe` in action 👇
 Want to test it live? Here's a minimal demo running in DartPad 👇
 
 [![Open in DartPad](https://dartpad.dev/assets/play_button.svg)](https://dartpad.dev/?id=2cb20d24bdaf111496bc2088822fe1b7)
+
+## 🧪 Run the DartPad demo locally
+
+To run the DartPad-compatible demo on your device/emulator:
+
+```bash
+# Make sure you're in the example/ folder
+cd example
+
+# Then run the custom demo entry point
+flutter run -t lib/dartpad_demo.dart
+```
+
+> 💡 If you use FVM, replace `flutter` with `fvm flutter` in the command above.
 
 ## 📦 Parameters
 
