@@ -85,9 +85,11 @@ flutter run example
 
 ---
 
-## 🎥 Demo Video
+## 🎬 Demo
 
-[▶️ Watch Demo Video](https://github.com/ChathraNavoda/keyboard_safe/blob/main/example/assets/keyboard_safe_demo.mp4)
+Here's a quick demo of `KeyboardSafe` in action 👇
+
+![KeyboardSafe Demo](https://raw.githubusercontent.com/ChathraNavoda/keyboard_safe/main/example/assets/keyboard_safe_demo.gif)
 
 ## 📦 Parameters
 
