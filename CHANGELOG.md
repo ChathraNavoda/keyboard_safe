@@ -1,12 +1,10 @@
-## [0.0.1] - 2025-07-21
+## [0.0.2] - 2025-07-22
 
-Initial release of `keyboard_safe`!
+🎉 Improvements and refinements:
 
-- Prevents keyboard overflow in forms and layouts
-- Auto-scrolls to focused text fields
-- Optional sticky footer support above the keyboard
-- Tap outside to dismiss the keyboard
-- Animated transitions for layout shifts
-- Optional SafeArea wrapping
-- Supports scrollable and non-scrollable layouts
-- Programmatic `dismissKeyboard()` method
+- ✅ Added advanced full demo with toggle (with vs. without `KeyboardSafe`)
+- 📱 Polished dark theme UI with custom fonts and layout
+- 🧪 DartPad-compatible demo added (`dartpad_demo.dart`)
+- 📄 Added dartdoc comments to public APIs (passed 20% threshold)
+- 🧼 Improved README with installation, usage, and example guidance
+- 🔧 Added issue tracker URL to pubspec metadata
