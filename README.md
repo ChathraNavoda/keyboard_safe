@@ -85,6 +85,10 @@ flutter run example
 
 ---
 
+## 🎥 Demo Video
+
+[▶️ Watch Demo Video](https://github.com/ChathraNavoda/keyboard_safe/blob/main/example/assets/keyboard_safe_demo.mp4)
+
 ## 📦 Parameters
 
 | Parameter                   | Type                           | Default                       | Description                                                   |
