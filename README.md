@@ -91,6 +91,12 @@ Here's a quick demo of `KeyboardSafe` in action 👇
 
 <img src="https://raw.githubusercontent.com/ChathraNavoda/keyboard_safe/main/example/assets/keyboard_safe_demo.gif" width="600" alt="KeyboardSafe Demo" />
 
+## 🧪 Try it on DartPad
+
+Want to test it live? Here's a minimal demo running in DartPad 👇
+
+[![Open in DartPad](https://dartpad.dev/assets/play_button.svg)](https://dartpad.dev/?id=2cb20d24bdaf111496bc2088822fe1b7)
+
 ## 📦 Parameters
 
 | Parameter                   | Type                           | Default                       | Description                                                   |
