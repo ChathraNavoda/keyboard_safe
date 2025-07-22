@@ -89,7 +89,7 @@ flutter run example
 
 Here's a quick demo of `KeyboardSafe` in action 👇
 
-![KeyboardSafe Demo](https://raw.githubusercontent.com/ChathraNavoda/keyboard_safe/main/example/assets/keyboard_safe_demo.gif)
+<img src="https://raw.githubusercontent.com/ChathraNavoda/keyboard_safe/main/example/assets/keyboard_safe_demo.gif" width="600" alt="KeyboardSafe Demo" />
 
 ## 📦 Parameters
 
