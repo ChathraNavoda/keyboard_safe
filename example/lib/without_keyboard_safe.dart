@@ -19,7 +19,7 @@ class _WithoutKeyboardSafePageState extends State<WithoutKeyboardSafePage> {
 
     // Show feedback
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Submitted ✨')),
+      const SnackBar(content: Text('Submitted!')),
     );
 
     // Clear fields
@@ -109,16 +109,19 @@ class _TextFieldBox extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black12),
         borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
+        color: const Color(0xFF1E1E1E),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: TextField(
+        style: TextStyle(color: Colors.white),
         controller: controller,
         maxLines: maxLines,
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
           border: InputBorder.none,
+          labelStyle: TextStyle(color: Colors.white70),
+          hintStyle: TextStyle(color: Colors.white38),
         ),
       ),
     );

@@ -17,12 +17,16 @@ class DemoApp extends StatelessWidget {
       title: 'KeyboardSafe Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: const ColorScheme.light(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: Colors.black,
+        colorScheme: const ColorScheme.dark(
           primary: Color(0xFF1DB2BD),
-          secondary: Color(0xFFFFFFFF),
-          surface: Color(0xFFFFFFFF),
+          secondary: Colors.white,
+          surface: Color(0xFF1E1E1E),
         ),
-        textTheme: GoogleFonts.happyMonkeyTextTheme(),
+        textTheme: GoogleFonts.happyMonkeyTextTheme(
+          ThemeData.dark().textTheme, // 👈 important
+        ),
         useMaterial3: true,
       ),
       home: const DemoSwitcher(),
@@ -111,7 +115,9 @@ class _ToggleButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: selected ? Colors.white : Colors.transparent,
+            color: selected
+                ? Theme.of(context).colorScheme.surface
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(50),
           ),
           child: Text(
@@ -120,7 +126,9 @@ class _ToggleButton extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: selected
                   ? Theme.of(context).colorScheme.primary
-                  : Colors.grey.shade600,
+                  : Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white70
+                      : Colors.grey.shade600,
             ),
           ),
         ),
