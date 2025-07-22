@@ -1,3 +1,25 @@
+/// 📱 KeyboardSafe Example App
+///
+/// This is the entry point for the demo app.
+/// It shows a toggle between two pages:
+///
+/// ✅ `WithKeyboardSafePage`
+///     Demonstrates proper keyboard handling using the KeyboardSafe widget.
+///
+/// 🚫 `WithoutKeyboardSafePage`
+///     Shows the same UI without KeyboardSafe to illustrate common layout issues.
+///
+/// 📂 You can find the source files in:
+/// - `example/lib/with_keyboard_safe.dart`
+/// - `example/lib/without_keyboard_safe.dart`
+///
+/// 👉 To explore fully, consider cloning the repo:
+/// https://github.com/ChathraNavoda/keyboard_safe
+///
+/// 💡 Run this demo using:
+/// flutter run example
+library;
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
