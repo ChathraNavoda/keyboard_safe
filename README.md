@@ -49,23 +49,226 @@ import 'package:keyboard_safe/keyboard_safe.dart';
 
 @override
 Widget build(BuildContext context) {
-  return KeyboardSafe(
-    scroll: true,
-    dismissOnTapOutside: true,
-    footer: ElevatedButton(
-      onPressed: () {},
-      child: const Text('Submit'),
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('KeyboardSafe Advanced Example'),
     ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: const [
-        TextField(decoration: InputDecoration(labelText: 'Email')),
-        SizedBox(height: 16),
-        TextField(decoration: InputDecoration(labelText: 'Password')),
-      ],
+    body: KeyboardSafe(
+      scroll: true,
+      autoScrollToFocused: true,
+      dismissOnTapOutside: true,
+      persistFooter: true,
+      safeArea: true,
+      padding: const EdgeInsets.all(24),
+      keyboardAnimationDuration: const Duration(milliseconds: 300),
+      keyboardAnimationCurve: Curves.easeInOut,
+      onKeyboardChanged: (visible, height) {
+        debugPrint('Keyboard is ${visible ? 'visible' : 'hidden'} ($height px)');
+      },
+      footer: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: ElevatedButton.icon(
+          onPressed: () {
+            KeyboardSafe.dismissKeyboard(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Form submitted')),
+            );
+          },
+          icon: const Icon(Icons.send),
+          label: const Text('Submit'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: const [
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Full Name',
+              hintText: 'Enter your name',
+            ),
+          ),
+          SizedBox(height: 16),
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Email',
+              hintText: 'you@example.com',
+            ),
+          ),
+          SizedBox(height: 16),
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Message',
+              hintText: 'Type something...',
+            ),
+            maxLines: 4,
+          ),
+        ],
+      ),
     ),
   );
 }
+
+```
+
+---
+
+### Advanced Example
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:keyboard_safe/keyboard_safe.dart';
+
+void main() {
+  runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: AdvancedKeyboardSafeDemo(),
+  ));
+}
+
+class AdvancedKeyboardSafeDemo extends StatefulWidget {
+  const AdvancedKeyboardSafeDemo({super.key});
+
+  @override
+  State<AdvancedKeyboardSafeDemo> createState() => _AdvancedKeyboardSafeDemoState();
+}
+
+class _AdvancedKeyboardSafeDemoState extends State<AdvancedKeyboardSafeDemo> {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final messageController = TextEditingController();
+
+  void _handleSubmit() {
+    KeyboardSafe.dismissKeyboard(context);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Form submitted ✅')),
+    );
+
+    nameController.clear();
+    emailController.clear();
+    messageController.clear();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    messageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Advanced KeyboardSafe Example'),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF1DB2BD),
+        foregroundColor: Colors.white,
+      ),
+      body: KeyboardSafe(
+        scroll: true,
+        autoScrollToFocused: true,
+        dismissOnTapOutside: true,
+        persistFooter: true,
+        safeArea: true,
+        padding: const EdgeInsets.all(24),
+        keyboardAnimationDuration: const Duration(milliseconds: 300),
+        keyboardAnimationCurve: Curves.easeInOut,
+        footer: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: ElevatedButton.icon(
+            onPressed: _handleSubmit,
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              backgroundColor: const Color(0xFF1DB2BD),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            icon: const Icon(Icons.send),
+            label: const Text(
+              'Send',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ),
+        onKeyboardChanged: (visible, height) {
+          debugPrint('Keyboard is ${visible ? 'shown' : 'hidden'} ($height px)');
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _TextFieldBox(
+              label: 'Name',
+              hint: 'Your full name',
+              controller: nameController,
+            ),
+            const SizedBox(height: 16),
+            _TextFieldBox(
+              label: 'Email',
+              hint: 'you@example.com',
+              controller: emailController,
+            ),
+            const SizedBox(height: 16),
+            _TextFieldBox(
+              label: 'Message',
+              hint: 'Type your message...',
+              maxLines: 4,
+              controller: messageController,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TextFieldBox extends StatelessWidget {
+  final String label;
+  final String hint;
+  final int maxLines;
+  final TextEditingController controller;
+
+  const _TextFieldBox({
+    required this.label,
+    required this.hint,
+    required this.controller,
+    this.maxLines = 1,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.black12),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: TextField(
+        controller: controller,
+        maxLines: maxLines,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          border: InputBorder.none,
+        ),
+      ),
+    );
+  }
+}
+
 ```
 
 ---
