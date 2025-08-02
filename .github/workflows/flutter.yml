@@ -16,7 +16,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.27.0"
+          flutter-version: "3.27.3"
           cache: true
 
       - name: Install dependencies
@@ -28,7 +28,6 @@ jobs:
       - name: Run tests
         run: flutter test
 
-      # Optional: Add dry-run publish check for PRs
       - name: Dry run pub publish
         if: github.event_name == 'pull_request'
         run: dart pub publish --dry-run
