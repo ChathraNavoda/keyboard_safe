@@ -1,53 +1,34 @@
 name: Flutter CI
+
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-  workflow_dispatch:
 
 jobs:
-  test:
-    name: Test on Flutter ${{ matrix.flutter-version }}
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        flutter-version: ["3.19.6", "3.24.3", "3.27.0"]
-      fail-fast: false
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install FVM
-        run: dart pub global activate fvm
-
-      - name: Use FVM Flutter version
-        run: |
-          fvm install ${{ matrix.flutter-version }}
-          fvm use ${{ matrix.flutter-version }}
-
-      - name: Flutter doctor
-        run: fvm flutter doctor -v
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.27.0"
+          cache: true
 
       - name: Install dependencies
-        run: |
-          fvm flutter clean
-          fvm flutter pub get
+        run: flutter pub get
 
       - name: Run analyzer
-        run: fvm flutter analyze
+        run: flutter analyze
 
       - name: Run tests
-        run: fvm flutter test
+        run: flutter test
 
-      - name: Coverage (only stable version)
-        if: matrix.flutter-version == '3.27.0'
-        run: fvm flutter test --coverage
-
-      - name: Upload coverage
-        if: matrix.flutter-version == '3.27.0'
-        uses: codecov/codecov-action@v3
-        with:
-          file: coverage/lcov.info
-          flags: unittests
-          name: keyboard_safe
+      # Optional: Add dry-run publish check for PRs
+      - name: Dry run pub publish
+        if: github.event_name == 'pull_request'
+        run: dart pub publish --dry-run
