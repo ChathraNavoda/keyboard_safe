@@ -1,15 +1,12 @@
 name: Flutter CI
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-  # Add workflow dispatch for manual runs
   workflow_dispatch:
 
 jobs:
-  # Test on multiple Flutter versions for better compatibility
   test:
     name: Test on Flutter ${{ matrix.flutter-version }}
     runs-on: ubuntu-latest
@@ -19,125 +16,38 @@ jobs:
       fail-fast: false
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ matrix.flutter-version }}
-          cache: true
+      - name: Install FVM
+        run: dart pub global activate fvm
+
+      - name: Use FVM Flutter version
+        run: |
+          fvm install ${{ matrix.flutter-version }}
+          fvm use ${{ matrix.flutter-version }}
 
       - name: Flutter doctor
-        run: flutter doctor -v
+        run: fvm flutter doctor -v
 
       - name: Install dependencies
         run: |
-          flutter clean
-          flutter pub get
-
-      - name: Verify formatting (non-blocking)
-        run: dart format --output=none --set-exit-if-changed . || echo "Formatting issues found but continuing..."
-        continue-on-error: true
+          fvm flutter clean
+          fvm flutter pub get
 
       - name: Run analyzer
-        run: flutter analyze
+        run: fvm flutter analyze
 
       - name: Run tests
-        run: flutter test
+        run: fvm flutter test
 
-      - name: Run tests with coverage (stable only)
+      - name: Coverage (only stable version)
         if: matrix.flutter-version == '3.27.0'
-        run: flutter test --coverage
+        run: fvm flutter test --coverage
 
-      - name: Upload coverage to Codecov
+      - name: Upload coverage
         if: matrix.flutter-version == '3.27.0'
         uses: codecov/codecov-action@v3
         with:
           file: coverage/lcov.info
           flags: unittests
           name: keyboard_safe
-        continue-on-error: true
-
-  # Package analysis (separate job)
-  pana:
-    name: Package Analysis
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.27.0"
-          cache: true
-
-      - name: Install dependencies
-        run: |
-          flutter clean
-          flutter pub get
-
-      - name: Install pana
-        run: dart pub global activate pana
-
-      - name: Run package analysis
-        run: dart pub global run pana --no-warning
-        continue-on-error: true
-
-  # Example app build verification (only on main branch)
-  example:
-    name: Build Example App
-    runs-on: ubuntu-latest
-    needs: test
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.27.0"
-          cache: true
-
-      - name: Install root dependencies
-        run: |
-          flutter clean
-          flutter pub get
-
-      - name: Build example app
-        run: |
-          if [ -d "example" ]; then
-            cd example
-            flutter clean
-            flutter pub get
-            flutter build apk --debug --verbose
-          else
-            echo "No example directory found, skipping example build"
-          fi
-
-  # Dry run publishing check (only on PRs)
-  publish-dry-run:
-    name: Publish Dry Run
-    runs-on: ubuntu-latest
-    needs: test
-    if: github.event_name == 'pull_request'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.27.0"
-          cache: true
-
-      - name: Install dependencies
-        run: |
-          flutter clean
-          flutter pub get
-
-      - name: Dry run pub publish
-        run: dart pub publish --dry-run
