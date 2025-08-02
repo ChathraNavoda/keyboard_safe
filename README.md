@@ -338,20 +338,14 @@ KeyboardSafe(
 
 ## 🎬 Demo
 
-See `KeyboardSafe` in action:
-
-<img src="https://raw.githubusercontent.com/ChathraNavoda/keyboard_safe/main/example/assets/keyboard_safe_demo.gif" width="600" alt="KeyboardSafe Demo" />
-
-## 🎬 Demo
-
 **See the dramatic difference KeyboardSafe makes:**
 
 ### 📱 Side-by-Side Comparison
 
-|                                                                               Without KeyboardSafe                                                                                |                                                                            With KeyboardSafe                                                                            |
-| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| <img src="https://raw.githubusercontent.com/ChathraNavoda/keyboard_safe/main/example/assets/without_keyboard_safe_demo.mp4" width="300" alt="Without KeyboardSafe - Broken UX" /> | <img src="https://raw.githubusercontent.com/ChathraNavoda/keyboard_safe/main/example/assets/with-reducing----3.mp4" width="300" alt="With KeyboardSafe - Perfect UX" /> |
-|                                 ❌ Footer covers form fields<br/>❌ No auto-scroll<br/>❌ Manual keyboard handling<br/>❌ Broken user experience                                  |                     ✅ Smart layout management<br/>✅ Auto-scroll to focused fields<br/>✅ Tap-to-dismiss keyboard<br/>✅ Seamless user experience                      |
+|                                                                               Without KeyboardSafe                                                                                |                                                                              With KeyboardSafe                                                                               |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| <img src="https://raw.githubusercontent.com/ChathraNavoda/keyboard_safe/main/example/assets/without_keyboard_safe_demo.gif" width="300" alt="Without KeyboardSafe - Broken UX" /> | <img src="https://raw.githubusercontent.com/ChathraNavoda/keyboard_safe/main/example/assets/with_keyboard_safe_demo.gif" width="300" alt="With KeyboardSafe - Perfect UX" /> |
+|                                 ❌ Footer covers form fields<br/>❌ No auto-scroll<br/>❌ Manual keyboard handling<br/>❌ Broken user experience                                  |                        ✅ Smart layout management<br/>✅ Auto-scroll to focused fields<br/>✅ Tap-to-dismiss keyboard<br/>✅ Seamless user experience                        |
 
 ### 🎯 The Problem vs Solution
 
