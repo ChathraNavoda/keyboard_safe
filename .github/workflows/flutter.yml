@@ -2,27 +2,113 @@ name: Flutter CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
+  # Add workflow dispatch for manual runs
+  workflow_dispatch:
 
 jobs:
-  build:
+  # Test on multiple Flutter versions for better compatibility
+  test:
+    name: Test on Flutter ${{ matrix.flutter-version }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        flutter-version: ["3.19.0", "3.24.0", "stable"]
+      fail-fast: false
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.32.7"
+          flutter-version: ${{ matrix.flutter-version }}
+          channel: ${{ matrix.flutter-version == 'stable' && 'stable' || '' }}
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run analyzer
-        run: flutter analyze
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
 
-      - name: Run tests
-        run: flutter test
+      - name: Run analyzer
+        run: flutter analyze --fatal-infos
+
+      - name: Run tests with coverage
+        run: flutter test --coverage
+
+      - name: Upload coverage to Codecov
+        if: matrix.flutter-version == 'stable'
+        uses: codecov/codecov-action@v3
+        with:
+          file: coverage/lcov.info
+          flags: unittests
+          name: keyboard_safe
+
+  # Separate job for package scoring
+  pana:
+    name: Package Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "stable"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Install pana
+        run: dart pub global activate pana
+
+      - name: Run package analysis
+        run: dart pub global run pana --no-warning
+
+  # Example app build verification
+  example:
+    name: Build Example App
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "stable"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build example app
+        run: |
+          cd example
+          flutter pub get
+          flutter build apk --debug
+          flutter build web
+
+  # Dry run publishing check
+  publish-dry-run:
+    name: Publish Dry Run
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "stable"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Dry run pub publish
+        run: dart pub publish --dry-run
