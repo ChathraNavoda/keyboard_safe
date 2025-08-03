@@ -18,6 +18,14 @@ jobs:
       - name: Set up Dart
         uses: dart-lang/setup-dart@v1
 
+      - name: Format Dart code
+        run: dart format .
+
+      - name: Analyze Dart code (warnings allowed)
+        run: |
+          flutter pub get
+          flutter analyze || true
+
       - name: Update DartPad Gist
         env:
           GIST_ID: 2cb20d24bdaf111496bc2088822fe1b7
