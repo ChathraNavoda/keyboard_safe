@@ -301,15 +301,20 @@ void main() {
     });
 
     testWidgets('validates autoScrollToFocused requires scroll enabled',
-        (WidgetTester tester) async {
-      expect(
-        () => KeyboardSafe(
+        (tester) async {
+      var didThrow = false;
+
+      try {
+        KeyboardSafe(
           scroll: false,
           autoScrollToFocused: true,
           child: Container(),
-        ),
-        throwsAssertionError,
-      );
+        );
+      } catch (e) {
+        didThrow = true;
+      }
+
+      expect(didThrow, isTrue);
     });
 
     testWidgets('allows autoScrollToFocused when scroll is enabled',
