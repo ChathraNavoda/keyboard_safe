@@ -29,7 +29,7 @@ jobs:
           echo "ℹ️ Analyzer completed. Warnings will not fail the build."
 
       - name: Run tests
-        run: flutter test --enable-asserts
+        run: flutter test
 
       - name: Dry run pub publish
         if: github.event_name == 'pull_request'
