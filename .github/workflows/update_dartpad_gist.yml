@@ -1,0 +1,31 @@
+name: Update DartPad Gist
+
+on:
+  push:
+    paths:
+      - "example/dartpad_demo.dart"
+    branches:
+      - main
+
+jobs:
+  update-gist:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Update DartPad Gist
+        env:
+          GIST_ID: 2cb20d24bdaf111496bc2088822fe1b7
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+        run: |
+          FILE_CONTENT=$(jq -Rs . < example/dartpad_demo.dart)
+
+          curl -X PATCH "https://api.github.com/gists/$GIST_ID" \
+            -H "Authorization: Bearer $GIST_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"files\": {\"dartpad_demo.dart\": {\"content\": $FILE_CONTENT}}}"
