@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -22,13 +23,13 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run analyzer (non-fatal)
+      - name: Run analyzer (non-blocking)
         run: |
           flutter analyze || true
-          echo "Analyzer completed. Warnings will not fail the build."
+          echo "ℹ️ Analyzer completed. Warnings will not fail the build."
 
       - name: Run tests
-        run: flutter test
+        run: flutter test --enable-asserts
 
       - name: Dry run pub publish
         if: github.event_name == 'pull_request'
