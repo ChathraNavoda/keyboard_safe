@@ -1,7 +1,7 @@
 name: keyboard_safe
 description: >
   A lightweight Flutter widget that prevents keyboard overflow by automatically adjusting layout, scrolling input fields into view, and providing sticky footers above the keyboard.
-version: 0.0.2
+version: 1.0.0
 repository: https://github.com/ChathraNavoda/keyboard_safe
 homepage: https://github.com/ChathraNavoda/keyboard_safe
 issue_tracker: https://github.com/ChathraNavoda/keyboard_safe/issues
