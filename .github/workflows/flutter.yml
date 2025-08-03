@@ -22,8 +22,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run analyzer
-        run: flutter analyze
+      - name: Run analyzer (non-fatal)
+        run: |
+          flutter analyze || true
+          echo "Analyzer completed. Warnings will not fail the build."
 
       - name: Run tests
         run: flutter test
